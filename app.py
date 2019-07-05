@@ -24,6 +24,6 @@ def initialize_database():
 
 database = get_data()
 
-if __name__ == '__main__' or __name__ == 'app':
+if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(port=port)
