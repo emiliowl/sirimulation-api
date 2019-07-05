@@ -4,7 +4,6 @@ from fuzzywuzzy import process
 from datetime import datetime
 
 app = Flask(__name__)
-database = ["pêra", "uva", "maçã", "salada mista"]
 
 @app.route('/simulation/<string:say_my_name>', methods=['GET', 'POST'])
 def hello_world(say_my_name):
@@ -15,5 +14,13 @@ def hello_world(say_my_name):
         ret = f"{ret}{datetime.now()} //{el[0]} x {say_my_name}: {el[1]}<br />"
     return ret
 
-if __name__ == '__main__':
+def initialize_database():
+    text_file = open("nosql.txt", "r")
+    lines = text_file.readlines()
+    text_file.close()
+    return lines
+
+database = initialize_database()
+
+if __name__ == '__main__' or __name__ == 'app':
     app.run()
