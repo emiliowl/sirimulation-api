@@ -26,4 +26,7 @@ database = get_data()
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(port=port)
+    if(os.environ.get("ENV", "dev") == "dev"):
+        app.run(port=port, debug=True)
+    else:
+        app.run(port=port)
