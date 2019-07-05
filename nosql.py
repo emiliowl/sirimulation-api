@@ -1,3 +1,4 @@
+raw_data = """"
 LEGEND
 NSX
 MARRUA
@@ -1231,3 +1232,7 @@ T6
 T5
 KA SEDAN
 FOCUS FASTBACK
+"""
+
+def get_data():
+    return raw_data.splitlines()
