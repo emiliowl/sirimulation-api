@@ -5,21 +5,26 @@ from flask import Flask, jsonify
 from fuzzywuzzy import process
 from datetime import datetime
 from simulation.app import simulation_app
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 app.register_blueprint(simulation_app)
 
-database = get_data()
+@app.route('/vehicle/match/<string:vehicle_name>', methods=['GET'])
+def find_vehicle_match_short(vehicle_name):
+    return find_vehicle_match(vehicle_name)
 
-@app.route('/simulation/<string:say_my_name>', methods=['GET', 'POST'])
-def hello_world(say_my_name):
+@app.route('/vehicle/match/<string:vehicle_name>/<int:year>', methods=['GET'])
+def find_vehicle_match(vehicle_name, year=2000):
     print(f'{datetime.now()} // Calculating similarities ...')
-    selection = process.extractBests(query=say_my_name, choices=[el["TRIM"] for el in database], limit=5)
+    target_data = [v for v in get_data() if int(v['MANUFACTUREYEAR']) >= year and int(v['MODELYEAR']) >= year]
+    selection = process.extractBests(query=vehicle_name, choices=[el["TRIM"] for el in target_data], limit=5)
     print(f"{datetime.now()} // Process finished, returning data ...")
 
     return_data = []
     for sel in selection:
-        next_sel = next(vehicle for vehicle in database if vehicle["TRIM"] == sel[0])
+        next_sel = next(vehicle for vehicle in get_data() if vehicle["TRIM"] == sel[0])
         if next_sel != None:
             next_sel['ACCURACY'] = sel[1]
         if next_sel != None and '_id' in next_sel:

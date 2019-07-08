@@ -1,9 +1,9 @@
 default_data = {
   'meta': {
-    'LenderCode': "bankb",
-    'TransactionId': "KpSz_NBS10Zi2e9SoXGntiFd",
+    'LenderCode': "Sirimulation Bank",
+    'TransactionId': "9999",
     'TransactionType': "EstimatePayment",
-    'LenderReferenceNumber': "96598214"
+    'LenderReferenceNumber': "1234"
   },
   'data': {
     'StatusCode': "pre-approved",
@@ -30,11 +30,43 @@ default_data = {
     }]
 }
 
+import re
 from flask import Blueprint, jsonify, request
+
 simulation_app = Blueprint('simulation_app', __name__, template_folder='templates')
+from app import find_vehicle_match_short
+
+def calculate_payment_options(selling_price, downpayment, terms):
+    customer_reg_fee = 100
+    return [{
+        'Term': terms,
+        'Interest': 1,
+        'VehicleInstallmentValue': (((selling_price + customer_reg_fee) - downpayment) / terms),
+        'FinanceInsuranceInstallmentValue': 0,
+        'IOFValue': 0,
+        'IOFValueWithInsurance': 0,
+        'InsuranceValue': 0,
+        'ContractRecordRate': 1,
+        'PropertyValuatiuonRate': 0,
+        'CustomerRegistrationFee': customer_reg_fee
+    }]
 
 @simulation_app.route('/simulation', methods=['POST'])
 def simulate():
     body_from_request = request.get_json()
+    data = body_from_request['data']
+    financing_terms = data['FinancingTerms']
+    vehicle = data['Vehicle']
+    extracted_vehicle = vehicle['Trim']
+
+    selling_price = float(re.sub(r'[^\d|.]', '', str(vehicle['SellingPrice'])))
+    downpayment = float(re.sub(r'[^\d|.]', '', str(financing_terms['DownPayment'])))
+    terms = int(re.sub(r'[^\d|.]', '', str(financing_terms['Term'])))
+
+    payment_options = calculate_payment_options(selling_price, downpayment, terms)
+    json_vehicle_data = find_vehicle_match_short(extracted_vehicle)
     default_data['data']['EstimatePaymentRequest'] = body_from_request
+    default_data['data']['PaymentOptions'] = payment_options
+
+    default_data['data']['Vehicle'] = json_vehicle_data.get_json()
     return jsonify(default_data)

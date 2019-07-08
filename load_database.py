@@ -28,7 +28,7 @@ client = None
 if env == "dev":
     client = MongoClient("localhost", 27017)
     load_to_mongo(client.vehicles)
-if env == "failover":
+elif env == "failover":
     load_to_failover_file()
 else:
     cert_path = os.path.dirname(os.path.realpath(__file__))
