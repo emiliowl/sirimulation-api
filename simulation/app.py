@@ -10,7 +10,7 @@ default_data = {
     'StatusMessage': "Bank returned the estimate payment",
     'IssuedOn': "2019-07-10T10:50:32.2494116-04:00",
     'EstimatePaymentRequest': {},
-    'PaymentOptions': [{
+    'PaymentOptions': {
           'Term': 48,
           'Interest': 16,
           'VehicleInstallmentValue': 2000.00,
@@ -21,7 +21,7 @@ default_data = {
           'ContractRecordRate': 15,
           'PropertyValuatiuonRate': 3.9,
           'CustomerRegistrationFee': 100.00
-         }]
+         }
   },
   'errors': [{
       'InternalCode': "abc123",
@@ -38,7 +38,7 @@ from app import find_vehicle_match_short
 
 def calculate_payment_options(selling_price, downpayment, terms):
     customer_reg_fee = 100
-    return [{
+    return {
         'Term': terms,
         'Interest': 1,
         'VehicleInstallmentValue': (((selling_price + customer_reg_fee) - downpayment) / terms),
@@ -49,7 +49,7 @@ def calculate_payment_options(selling_price, downpayment, terms):
         'ContractRecordRate': 1,
         'PropertyValuatiuonRate': 0,
         'CustomerRegistrationFee': customer_reg_fee
-    }]
+    }
 
 @simulation_app.route('/simulation', methods=['POST'])
 def simulate():

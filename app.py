@@ -14,7 +14,7 @@ def find_vehicle_match_short(vehicle_name):
     return find_vehicle_match(vehicle_name)
 
 @app.route('/vehicle/match/<string:vehicle_name>/<int:year>', methods=['GET'])
-def find_vehicle_match(vehicle_name, year=2000):
+def find_vehicle_match(vehicle_name, year=2017):
     print(f'{datetime.now()} // Calculating similarities ...')
     target_data = [v for v in get_data() if int(v['MANUFACTUREYEAR']) >= year and int(v['MODELYEAR']) >= year]
     selection = process.extractBests(query=vehicle_name, choices=[el["TRIM"] for el in target_data], limit=5)
