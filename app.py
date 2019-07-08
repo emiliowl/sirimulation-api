@@ -1,13 +1,9 @@
 from nosql import get_data
 
-import os, ssl
+import os
 from flask import Flask, jsonify
 from fuzzywuzzy import process
 from datetime import datetime
-
-if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
-    getattr(ssl, '_create_unverified_context', None)):
-    ssl._create_default_https_context = ssl._create_unverified_context
 
 app = Flask(__name__)
 database = get_data()
