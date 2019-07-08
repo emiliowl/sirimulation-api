@@ -4,8 +4,11 @@ import os
 from flask import Flask, jsonify
 from fuzzywuzzy import process
 from datetime import datetime
+from simulation.app import simulation_app
 
 app = Flask(__name__)
+app.register_blueprint(simulation_app)
+
 database = get_data()
 
 @app.route('/simulation/<string:say_my_name>', methods=['GET', 'POST'])
