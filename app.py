@@ -4,12 +4,10 @@ import os
 from flask import Flask, jsonify
 from fuzzywuzzy import process
 from datetime import datetime
-from simulation.app import simulation_app
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
-app.register_blueprint(simulation_app)
 
 @app.route('/vehicle/match/<string:vehicle_name>', methods=['GET'])
 def find_vehicle_match_short(vehicle_name):
@@ -32,6 +30,9 @@ def find_vehicle_match(vehicle_name, year=2000):
         return_data.append(next_sel)
 
     return jsonify(return_data)
+
+from simulation.app import simulation_app
+app.register_blueprint(simulation_app)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
