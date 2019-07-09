@@ -3,6 +3,7 @@ import json
 from pymongo import MongoClient
 
 env = os.environ.get("ENV", "dev")
+host_ip_address = os.environ.get("HOST_IP_ADDRESS", "dev")
 client = None
 
 def load_from_mongo(client):
@@ -17,7 +18,7 @@ def load_from_failover():
 
 def get_data():
     if env == "dev":
-        client = MongoClient("localhost", 27017)
+        client = MongoClient(host_ip_address, 27017)
         return list(load_from_mongo(client))
     elif env == "failover":
         return list(load_from_failover())
