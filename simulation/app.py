@@ -41,7 +41,7 @@ def calculate_payment_options(selling_price, downpayment, terms):
     return {
         'Term': terms,
         'Interest': 1,
-        'VehicleInstallmentValue': (((selling_price + customer_reg_fee) - downpayment) / terms),
+        'VehicleInstallmentValue': round((((selling_price + customer_reg_fee) - downpayment) / terms), 2),
         'FinanceInsuranceInstallmentValue': 0,
         'IOFValue': 0,
         'IOFValueWithInsurance': 0,
